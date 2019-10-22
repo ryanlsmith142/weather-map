@@ -22,18 +22,41 @@ const marker = new mapboxgl.Marker({
 //Adds zoom control to map
 map.addControl(new mapboxgl.NavigationControl());
 
-// function reverseGeocode() {
-//     $.get('https://api.mapbox.com/geocoding/v5/mapbox.places/' + longitude + "," + latitude + ".json?access_token=" + mapboxToken).done(function(data) {
-//         cityState = data.features[1].place_name;
-//         $('#cityState').text(cityState);
-//     })//get()
-// } //reverseGeocode()
 
-let latitude =
-function reverseGeocode() {
-    fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/' + longitude + "," + latitude + ".json?access_token=" + mapboxToken).then((data) => {
-        console.log(data);
-    })
+function reverseGeocode(longitude, latitude) {
+
+    return fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/' + longitude + "," + latitude + ".json?access_token=" + mapboxToken).then((data) => {
+        return data.json();
+    });
 }
 
-reverseGeocode();
+function getCityState(longitude, latitude) {
+    reverseGeocode(longitude, latitude).then((data) => {
+            console.log(data);
+            let cityState = data.features[1].place_name;
+            $('#cityState').text(cityState);
+     }) //.then
+} //getCityState
+
+function onDragEnd() {
+    let lngLat = marker.getLngLat();
+    let longitude = lngLat.lng.toString();
+    let latitude = lngLat.lat.toString();
+    getCityState(longitude, latitude);
+} //onDragEnd()
+
+marker.on('dragend', onDragEnd);
+
+function createWeatherCard() {
+    let weatherCardHtml = "";
+
+}
+
+function getWeather() {
+
+}
+
+function getWeatherIcon() {
+
+}
+
