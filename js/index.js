@@ -81,13 +81,14 @@ function createWeatherCard(longitude, latitude) {
 
         } //for
 
+        document.getElementById("weather-cards").innerHTML = weatherCardHtml;
 
 
     }); //.then
 
 
 } //createWeatherCard
-        console.log(document.getElementById('#weather-cards'));
+        console.log(document.getElementById('weather-cards'));
 
 function formatDate(data, i) {
 
