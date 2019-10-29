@@ -1,5 +1,40 @@
 "use strict";
+const weatherObjects = [
+    {
+        condition: "clear-day",
+        url: 'icon/sun.svg'
 
+    }, {
+        condition: "clear-night",
+        url: 'icon/moon-full.svg'
+    }, {
+        condition: "rain",
+        url: 'icon/cloud-rain.svg',
+        gif: 'gif/rain.gif'
+    }, {
+        condition: "snow",
+        url: 'icon/cloud-snow'
+
+    }, {
+        condition: "sleet",
+        url: 'icon/cloud-hail.svg'
+    }, {
+        condition: "wind",
+        url: 'icon/wind.svg'
+    }, {
+        condition: "fog",
+        url: 'icon/cloud-fog.svg'
+    }, {
+        condition: "cloudy",
+        url: 'icon/cloud.svg'
+    }, {
+        condition: "partly-cloudy-day",
+        url: 'icon/cloud-sun.svg'
+    }, {
+        condition: "partly-cloudy-night",
+        url: 'icon/cloud-moon.svg'
+    }
+];
 
 mapboxgl.accessToken = mapboxToken;
 
@@ -54,8 +89,9 @@ function createWeatherCard(longitude, latitude) {
     getWeather(longitude, latitude).then((data) => {
         let weatherCardHtml = "";
 
-        for(let i = 0; i <= 3; i++) {
+        for(let i = 0; i <= 2; i++) {
 
+            let weatherCondition = getWeatherIcon(data, weatherObjects, i);
 
             weatherCardHtml += `
         
@@ -67,7 +103,7 @@ function createWeatherCard(longitude, latitude) {
                 
                 <h6 class="card-subtitle mb-2 text-muted">${data.daily.data[i].apparentTemperatureHigh}/${data.daily.data[i].apparentTemperatureLow}&#8457;</h6>
                 
-                <img src="weatherCondition">
+                <img src="${weatherCondition}">
                 
                 <p class="card-text">${data.daily.data[i].summary}</p>
             
@@ -113,7 +149,26 @@ function getWeather(longitude, latitude) {
 }
 
 
-function getWeatherIcon() {
+function getWeatherIcon(data, weatherObjects, i) {
 
+
+    let weatherCondition = "";
+
+    let weatherIcon = data.daily.data[i].icon;
+
+    weatherObjects.forEach(function(element) {
+        if(weatherIcon === element.condition) {
+            weatherCondition += element.url;
+        }
+
+
+    });
+
+    return weatherCondition;
 }
 
+// Event Listener
+
+document.getElementById("weather-forecast").addEventListener("change", () => {
+   let days = document.getElementById("weather-forecast")
+});
