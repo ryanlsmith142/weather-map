@@ -74,22 +74,23 @@ function getCityState(longitude, latitude) {
      }) //.then
 } //getCityState
 
-function onDragEnd() {
+function onDragEnd(days) {
     let lngLat = marker.getLngLat();
     let longitude = lngLat.lng.toString();
     let latitude = lngLat.lat.toString();
     getCityState(longitude, latitude);
-    createWeatherCard(longitude, latitude);
+    createWeatherCard(longitude, latitude, days);
 } //onDragEnd()
 
 marker.on('dragend', onDragEnd);
 
-function createWeatherCard(longitude, latitude) {
+function createWeatherCard(longitude, latitude, days) {
 
     getWeather(longitude, latitude).then((data) => {
+
         let weatherCardHtml = "";
 
-        for(let i = 0; i <= 2; i++) {
+        for(let i = 0; i < days; i++) {
 
             let weatherCondition = getWeatherIcon(data, weatherObjects, i);
 
@@ -169,6 +170,16 @@ function getWeatherIcon(data, weatherObjects, i) {
 
 // Event Listener
 
-document.getElementById("weather-forecast").addEventListener("change", () => {
-   let days = document.getElementById("weather-forecast")
-});
+
+    document.getElementById("weather-forecast").addEventListener("change", () => {
+        const dropDownSelect = document.getElementById("weather-forecast");
+
+       let days = dropDownSelect.options[dropDownSelect.selectedIndex].value;
+
+        onDragEnd(days);
+
+
+
+    });
+
+
