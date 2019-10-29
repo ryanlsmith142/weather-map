@@ -1,4 +1,8 @@
 "use strict";
+
+/**
+ * Object that contains a weather condition that corresponds with a weather condition from the Dark Sky object. Based on the weather condition of that day, an icon will be displayed on the screen.
+ * **/
 const weatherObjects = [
     {
         condition: "clear-day",
@@ -36,10 +40,14 @@ const weatherObjects = [
     }
 ];
 
+/**
+ * This is the mapbox token needed to use the mapbox api
+ * **/
+
 mapboxgl.accessToken = mapboxToken;
 
-
-//adds map and centers it on San Antonio
+/** Creates a map and centers it on San Antonio, TX
+ * **/
 const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v9',
@@ -48,25 +56,32 @@ const map = new mapboxgl.Map({
 }); //mapboxgl object
 
 
-//Creates draggable marker
+/**
+ * This creates a draggable marker and centers it on San Antonio, TX.
+ * **/
 const marker = new mapboxgl.Marker({
     draggable: true
 }) //marker object
     .setLngLat([-98.4936, 29.4241])
     .addTo(map);
 
-//Adds zoom control to map
+/**
+ * Adds navigation control on the map.
+ * **/
 map.addControl(new mapboxgl.NavigationControl());
 
-
-
+/**
+ * A fetch request that gets an object from the mapbox API based on the longitude and latitude passed to it.
+ * **/
 function reverseGeocode(longitude, latitude) {
-
     return fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/' + longitude + "," + latitude + ".json?access_token=" + mapboxToken).then((data) => {
         return data.json();
     });
 }
 
+/**
+ * Uses reverseGeoCode() to get the address of the passed longitude and latitude parameters.
+ * **/
 function getCityState(longitude, latitude) {
     reverseGeocode(longitude, latitude).then((data) => {
             let cityState = data.features[1].place_name;
@@ -74,6 +89,10 @@ function getCityState(longitude, latitude) {
      }) //.then
 } //getCityState
 
+
+/**
+ * onDragEnd() gets the longtide and latitude of the draggable marker and then passes those coordinates to getCityState() and createWeatherCard().
+ * **/
 function onDragEnd(days) {
     let lngLat = marker.getLngLat();
     let longitude = lngLat.lng.toString();
@@ -82,6 +101,9 @@ function onDragEnd(days) {
     createWeatherCard(longitude, latitude, days);
 } //onDragEnd()
 
+/**
+ * Event listener
+ * **/
 marker.on('dragend', onDragEnd);
 
 function createWeatherCard(longitude, latitude, days) {
@@ -125,7 +147,6 @@ function createWeatherCard(longitude, latitude, days) {
 
 
 } //createWeatherCard
-        console.log(document.getElementById('weather-cards'));
 
 function formatDate(data, i) {
 
@@ -171,15 +192,9 @@ function getWeatherIcon(data, weatherObjects, i) {
 // Event Listener
 
 
-    document.getElementById("weather-forecast").addEventListener("change", () => {
-        const dropDownSelect = document.getElementById("weather-forecast");
-
-       let days = dropDownSelect.options[dropDownSelect.selectedIndex].value;
-
-        onDragEnd(days);
-
-
-
-    });
+document.getElementById("weather-forecast").addEventListener("change", () => {
+    const dropDownSelect = document.getElementById("weather-forecast");
+    return dropDownSelect.options[dropDownSelect.selectedIndex].value;
+});
 
 
