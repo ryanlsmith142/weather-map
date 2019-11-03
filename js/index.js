@@ -40,6 +40,7 @@ const weatherObjects = [
     }
 ];
 
+createWeatherCard(-98.4936, 29.4241);
 /**
  * This is the mapbox token needed to use the mapbox api
  * **/
@@ -93,26 +94,31 @@ function getCityState(longitude, latitude) {
 /**
  * onDragEnd() gets the longtide and latitude of the draggable marker and then passes those coordinates to getCityState() and createWeatherCard().
  * **/
-function onDragEnd(days) {
+function onDragEnd() {
     let lngLat = marker.getLngLat();
     let longitude = lngLat.lng.toString();
     let latitude = lngLat.lat.toString();
     getCityState(longitude, latitude);
-    createWeatherCard(longitude, latitude, days);
+    createWeatherCard(longitude, latitude);
 } //onDragEnd()
 
 /**
- * Event listener
+ * Event listener: When the marker is set down, gets the longitude and latitude for that location.
  * **/
 marker.on('dragend', onDragEnd);
 
-function createWeatherCard(longitude, latitude, days) {
+/**
+ * Creates a bootstrap card that gives the weather for a specific longitude and latitude
+ * **/
+function createWeatherCard(longitude, latitude) {
 
     getWeather(longitude, latitude).then((data) => {
 
+        let defaultDays = 3;
+
         let weatherCardHtml = "";
 
-        for(let i = 0; i < days; i++) {
+        for(let i = 0; i < defaultDays; i++) {
 
             let weatherCondition = getWeatherIcon(data, weatherObjects, i);
 
@@ -170,7 +176,9 @@ function getWeather(longitude, latitude) {
     })
 }
 
-
+/**
+ * Gets the weather Icon from the weather objectd array at the top of the index.js file
+ * **/
 function getWeatherIcon(data, weatherObjects, i) {
 
 
@@ -191,7 +199,9 @@ function getWeatherIcon(data, weatherObjects, i) {
 
 // Event Listener
 
-
+/**
+ * Event Listener: Watches for when the drop down is changed.
+ * **/
 document.getElementById("weather-forecast").addEventListener("change", () => {
     const dropDownSelect = document.getElementById("weather-forecast");
     return dropDownSelect.options[dropDownSelect.selectedIndex].value;
